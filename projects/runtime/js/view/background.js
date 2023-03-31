@@ -26,9 +26,10 @@ var background = function (window) {
         var background;
 
         // ANIMATION VARIABLES HERE:
-
-        var tree
-        var buildings = []
+        var tree;
+        var city;
+        var buildings = [];
+       
 
         // called at the start of game and whenever the page is resized
         // add objects for display in background. draws each image added to the background once
@@ -38,16 +39,16 @@ var background = function (window) {
             // TODO: 2 - Part 2
             // this fills the background with a obnoxious yellow
             // you should modify this to suit your game
-            var backgroundFill = draw.rect(canvasWidth, canvasHeight, 'black');
+            var backgroundFill = draw.rect(canvasWidth, canvasHeight = groundY, 'black');
             background.addChild(backgroundFill);
-
             // TODO: 3 - Add a moon and starfield
+            var moon = draw.bitmap("https://www.publicdomainpictures.net/pictures/400000/nahled/vollmond-mond-png-clipart.png");
+            moon.x = 1200;
+            moon.y = 1;
+            moon.scaleX = 0.5;
+            moon.scaleY = 0.5;
 
-            var moon = draw.bitmap("img/moon.png");
-            moon.x = 1125;
-            moon.y = 150;
-            moon.scalex = 1.0;
-            moon.scaleY = 1.0;
+            
             background.addChild(moon);
 
             for (var i = 0; i < 150; i++) {
@@ -57,13 +58,10 @@ var background = function (window) {
                 background.addChild(circle);
             }
 
-
-
             // TODO 5: Part 1 - Add buildings!     Q: This is before TODO 4 for a reason! Why?
-
             for (var i = 0; i < 5; i++) {
                 var buildingHeight = 300;
-                var building = draw.rect(75, buildingHeight, "LightGray", "Black", 1);
+                var building = draw.rect(75, buildingHeight, "blue", "white", 5);
                 building.x = 200 * i;
                 building.y = groundY - buildingHeight;
                 background.addChild(building);
@@ -71,13 +69,23 @@ var background = function (window) {
             }
 
 
-
             // TODO 4: Part 1 - Add a tree
+
+            city = draw.bitmap("img/buildings.png");
+            city.x = 4;
+            city.y = 0;
+            city.scaleY = 1.3;
+            city.scaleX = 2;
+            background.addChild(city)
+
             tree = draw.bitmap("img/tree.png");
-            tree.x = 0;
-            tree.y = 0;
+            tree.x = 4;
+            tree.y = 10;
+            tree.scaleY = 1.3;
+            tree.scaleX = 2;
             background.addChild(tree);
 
+            
 
 
         } // end of render function - DO NOT DELETE
@@ -92,43 +100,37 @@ var background = function (window) {
             var groundY = ground.y;
 
             // TODO 4: Part 2 - Move the tree!
-            tree.x = tree.x + 1;
+            tree.x = tree.x -5;
 
             if (tree.x < -200) {
                 tree.x = canvasWidth;
             }
-
             // TODO 5: Part 2 - Parallax
-            for (var i = 0; i < building.length; i++) {
-                var eachElement = building[i];
-
-                // code to do something with each element
+            for (var i = 0; i < buildings.length; i++) {
+                var eachElement = buildings[i];
+                eachElement.x = eachElement.x + 1;
+                if (eachElement.x < -200) {
+                    eachElement.x = canvasWidth;
+                }
             }
 
+        } // end of update function - DO NOT DELETE
 
 
 
-            // code to do something with each element
-        }
+        /* Make a createjs Container for the background and let it know about the render and upate functions*/
+        background = new createjs.Container();
+        background.resize = render;
+        background.update = update;
 
+        /* make the background able to respond to resizing and timer updates*/
+        app.addResizeable(background);
+        app.addUpdateable(background);
 
-    } // end of update function - DO NOT DELETE
-
-
-
-    /* Make a createjs Container for the background and let it know about the render and upate functions*/
-    background = new createjs.Container();
-    background.resize = render;
-    background.update = update;
-
-    /* make the background able to respond to resizing and timer updates*/
-    app.addResizeable(background);
-    app.addUpdateable(background);
-
-    /* render and return the background */
-    render();
-    return background;
-};
+        /* render and return the background */
+        render();
+        return background;
+    };
 };
 
 // DON'T REMOVE THIS CODE //////////////////////////////////////////////////////
